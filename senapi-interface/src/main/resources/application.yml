@@ -1,0 +1,9 @@
+server:
+  port: 8123
+  servlet:
+    context-path: /api
+
+senlouapi:
+  client:
+    access-key: lalala
+    secrete-key: 12345678
