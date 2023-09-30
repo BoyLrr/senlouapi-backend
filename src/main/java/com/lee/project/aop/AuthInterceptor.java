@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.lee.project.annotation.AuthCheck;
 import com.lee.project.common.ErrorCode;
 import com.lee.project.exception.BusinessException;
-import com.lee.project.model.entity.User;
+import com.lee.senlouapicommon.model.entity.User;
 import com.lee.project.service.UserService;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;

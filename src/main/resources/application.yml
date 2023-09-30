@@ -36,3 +36,12 @@ senlouapi:
   client:
     access-key: lalala
     secrete-key: 12345678
+dubbo:
+  application:
+    name: dubbo-springboot-demo-provider
+  protocol:
+    name: dubbo
+    port: 22221
+  registry:
+    id: nacos-registry
+    address: nacos://localhost:8848

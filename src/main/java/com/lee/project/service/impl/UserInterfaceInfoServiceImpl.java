@@ -5,8 +5,8 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lee.project.common.ErrorCode;
 import com.lee.project.exception.BusinessException;
 import com.lee.project.mapper.UserInterfaceInfoMapper;
-import com.lee.project.model.entity.UserInterfaceInfo;
 import com.lee.project.service.UserInterfaceInfoService;
+import com.lee.senlouapicommon.model.entity.UserInterfaceInfo;
 import org.springframework.stereotype.Service;
 
 /**

@@ -2,7 +2,7 @@ package com.lee.project.mapper;
 
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.lee.project.model.entity.InterfaceInfo;
+import com.lee.senlouapicommon.model.entity.InterfaceInfo;
 
 /**
 * @author 17623

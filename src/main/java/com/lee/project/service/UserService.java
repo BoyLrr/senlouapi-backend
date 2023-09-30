@@ -2,7 +2,7 @@ package com.lee.project.service;
 
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.lee.project.model.entity.User;
+import com.lee.senlouapicommon.model.entity.User;
 
 import javax.servlet.http.HttpServletRequest;
 

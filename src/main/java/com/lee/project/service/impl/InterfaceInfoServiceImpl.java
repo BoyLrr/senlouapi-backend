@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lee.project.common.ErrorCode;
 import com.lee.project.exception.BusinessException;
 import com.lee.project.mapper.InterfaceInfoMapper;
-import com.lee.project.model.entity.InterfaceInfo;
+import com.lee.senlouapicommon.model.entity.InterfaceInfo;
 import com.lee.project.service.InterfaceInfoService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;

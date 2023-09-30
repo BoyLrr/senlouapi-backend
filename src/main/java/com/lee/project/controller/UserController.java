@@ -9,7 +9,7 @@ import com.lee.project.common.ErrorCode;
 import com.lee.project.common.ResultUtils;
 import com.lee.project.exception.BusinessException;
 import com.lee.project.model.dto.user.*;
-import com.lee.project.model.entity.User;
+import com.lee.senlouapicommon.model.entity.User;
 import com.lee.project.model.vo.UserVO;
 import com.lee.project.service.UserService;
 import org.apache.commons.lang3.StringUtils;

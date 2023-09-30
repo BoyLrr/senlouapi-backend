@@ -2,7 +2,9 @@ package com.lee.project.mapper;
 
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.lee.project.model.entity.UserInterfaceInfo;
+import com.lee.senlouapicommon.model.entity.UserInterfaceInfo;
+
+import java.util.List;
 
 /**
 * @author 17623
@@ -11,7 +13,7 @@ import com.lee.project.model.entity.UserInterfaceInfo;
 * @Entity generator.domain.UserInterfaceInfo
 */
 public interface UserInterfaceInfoMapper extends BaseMapper<UserInterfaceInfo> {
-
+    List<UserInterfaceInfo> listTopInvokeInterfaceInfo(int limit);
 }
 
 

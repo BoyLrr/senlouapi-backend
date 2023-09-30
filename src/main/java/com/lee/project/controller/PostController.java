@@ -13,7 +13,7 @@ import com.lee.project.model.dto.post.PostAddRequest;
 import com.lee.project.model.dto.post.PostQueryRequest;
 import com.lee.project.model.dto.post.PostUpdateRequest;
 import com.lee.project.model.entity.Post;
-import com.lee.project.model.entity.User;
+import com.lee.senlouapicommon.model.entity.User;
 import com.lee.project.service.PostService;
 import com.lee.project.service.UserService;
 import lombok.extern.slf4j.Slf4j;

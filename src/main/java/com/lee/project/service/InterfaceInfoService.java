@@ -2,7 +2,7 @@ package com.lee.project.service;
 
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.lee.project.model.entity.InterfaceInfo;
+import com.lee.senlouapicommon.model.entity.InterfaceInfo;
 
 /**
 * @author 17623

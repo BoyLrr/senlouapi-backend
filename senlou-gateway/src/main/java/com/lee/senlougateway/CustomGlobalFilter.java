@@ -1,7 +1,13 @@
 package com.lee.senlougateway;
 
 import com.lee.senlouapiclientsdk.utils.SignUtils;
+import com.lee.senlouapicommon.model.entity.InterfaceInfo;
+import com.lee.senlouapicommon.service.InnerInterfaceInfoService;
+import com.lee.senlouapicommon.service.InnerUserInterfaceInfoService;
+import com.lee.senlouapicommon.service.InnerUserService;
+import com.lee.senlouapicommon.model.entity.User;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.dubbo.config.annotation.DubboReference;
 import org.reactivestreams.Publisher;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
@@ -30,13 +36,24 @@ import java.util.List;
 @Slf4j
 @Component
 public class CustomGlobalFilter implements GlobalFilter, Ordered {
+    @DubboReference
+    private InnerUserService innerUserService;
+    @DubboReference
+    private InnerInterfaceInfoService innerInterfaceInfoService;
+    @DubboReference
+    private InnerUserInterfaceInfoService innerUserInterfaceInfoService;
 
+    //黑名单
     public static final List<String> IP_BLACK_LIST = Arrays.asList("16498223");
+    public static final String INTERFACE_HOST = "http://localhost:8123";
+
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         //1.请求日志
         ServerHttpRequest request = exchange.getRequest();
+        String path = INTERFACE_HOST + request.getPath().value();
+        String method = request.getMethod().toString();
         String sourceAddress = request.getLocalAddress().getHostString();
         //拿到响应对象
         ServerHttpResponse response = exchange.getResponse();
@@ -53,12 +70,22 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
         String timestamp = headers.getFirst("timestamp");
         String sign = headers.getFirst("sign");
         String body = headers.getFirst("body");
-        //todo
-        //
-        // 户
-        if (!"lalala".equals(accessKey)) {
+
+        //todo 实际情况应该是去数据库中查是否已分配给用户
+        User invokeUser = null;
+        try{
+            //调用内部服务，根据访问密钥获取用户信息
+            invokeUser = innerUserService.getInvokeUser(accessKey);
+        }catch (Exception e){
+            log.error("getInvokeUser error");
+        }
+        if (invokeUser == null){
+            //如果用户信息为空，处理未授权情况并返回响应
             return handleNoAuth(response);
         }
+//        if (!"lalala".equals(accessKey)) {
+//            return handleNoAuth(response);
+//        }
         if (Long.parseLong(nonce) > 10000L) {
             return handleNoAuth(response);
         }
@@ -78,19 +105,34 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
         }
 
         //todo 实际应该是从数据库中查出 secretKey
-        String serverSign = SignUtils.genSign(body, "12345678");
-        if (!sign.equals(serverSign)) {
+        //从获取到的用户信息中获取用户的密钥
+        String secretKey = invokeUser.getSecretKey();
+        //使用获取的密钥对请求进行签名
+        String serverSign = SignUtils.genSign(body,secretKey);
+        //检查请求中的签名是否为空，或者是否与服务器生成的签名不一致
+        if (sign == null || !sign.equals(serverSign)){
+            //如果签名为空或者签名不一样，返回处理未授权的响应
             return handleNoAuth(response);
         }
 
         //4.请求的模拟接口是否存在
         //todo 从数据库中查询模拟接口是否存在，以及请求方法是否匹配
-
+        //初始化一个InterfaceInfo 对象，用于存储查询结果
+        InterfaceInfo interfaceInfo = null;
+        try{
+            interfaceInfo = innerInterfaceInfoService.getInterfaceInfo(path,method);
+        }catch (Exception e){
+            log.error("getInterfaceInfo error",e);
+        }
+        //检查是否成功获取到接口信息
+        if(interfaceInfo == null){
+            return handleNoAuth(response);
+        }
         //5.请求转发
 //        Mono<Void> filter = chain.filter(exchange);
 
         //6.响应日志
-        return handleResponse(exchange, chain);
+        return handleResponse(exchange, chain,interfaceInfo.getId(),invokeUser.getId());
 
     }
 
@@ -101,7 +143,7 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
      * @param chain
      * @return
      */
-    public Mono<Void> handleResponse(ServerWebExchange exchange, GatewayFilterChain chain) {
+    public Mono<Void> handleResponse(ServerWebExchange exchange, GatewayFilterChain chain,long interfaceInfoId,long userId) {
         try {
             // 获取原始的响应对象
             ServerHttpResponse originalResponse = exchange.getResponse();
@@ -128,6 +170,11 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
                             // (这里就理解为它在拼接字符串,它把缓冲区的数据取出来，一点一点拼接好)
                             return super.writeWith(fluxBody.map(dataBuffer -> {
                                 //7.todo 调用成功 接口调用次数 + 1
+                                try{
+                                    innerUserInterfaceInfoService.invokeCount(interfaceInfoId,userId);
+                                }catch (Exception e){
+                                    log.error("invokeCount error",e);
+                                }
                                 // 读取响应体的内容并转换为字节数组
                                 byte[] content = new byte[dataBuffer.readableByteCount()];
                                 dataBuffer.read(content);

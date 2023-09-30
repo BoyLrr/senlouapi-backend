@@ -13,11 +13,12 @@ import com.lee.project.exception.BusinessException;
 import com.lee.project.model.dto.UserInterfaceInfo.UserInterfaceInfoAddRequest;
 import com.lee.project.model.dto.UserInterfaceInfo.UserInterfaceInfoQueryRequest;
 import com.lee.project.model.dto.UserInterfaceInfo.UserInterfaceInfoUpdateRequest;
-import com.lee.project.model.entity.User;
-import com.lee.project.model.entity.UserInterfaceInfo;
+
 import com.lee.project.service.UserInterfaceInfoService;
+import com.lee.senlouapicommon.model.entity.User;
 import com.lee.project.service.UserService;
 import com.lee.senlouapiclientsdk.client.SenlouApiClient;
+import com.lee.senlouapicommon.model.entity.UserInterfaceInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
