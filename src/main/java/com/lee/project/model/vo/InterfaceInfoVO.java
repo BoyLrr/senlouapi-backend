@@ -1,6 +1,5 @@
 package com.lee.project.model.vo;
 
-import com.lee.project.model.entity.Post;
 import com.lee.senlouapicommon.model.entity.InterfaceInfo;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
