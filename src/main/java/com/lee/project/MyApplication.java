@@ -21,7 +21,7 @@ public class MyApplication implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://user.senlou.top")
+                .allowedOrigins("http://api.senlou.top")
                 .allowCredentials(true);
     }
 
